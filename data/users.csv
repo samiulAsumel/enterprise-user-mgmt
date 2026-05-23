@@ -1,0 +1,10 @@
+# username,uid,primary_group,secondary_groups,shell,comment
+# Leave uid blank for auto-assignment.
+# Secondary groups: colon-separated (group1:group2).
+# New users are created with password locked — admin must set passwords after creation.
+alice,1101,developers,git_users:docker_users,/bin/bash,Alice Johnson — Backend Developer
+bob,1102,developers,git_users,/bin/bash,Bob Smith — Frontend Developer
+carol,1103,ops_team,docker_users:deploy_team,/bin/bash,Carol Davis — DevOps Engineer
+dave,1104,ops_team,deploy_team,/bin/bash,Dave Wilson — Systems Administrator
+eve,1105,auditors,,/sbin/nologin,Eve Martinez — Security Auditor
+frank,1106,contractors,,/bin/bash,Frank Brown — Contractor (temporary)

@@ -1,0 +1,11 @@
+# groupname,gid,members
+# Leave gid blank for auto-assignment.
+# Members: colon-separated usernames (must exist at run time).
+developers,2001,alice:bob
+ops_team,2002,carol:dave
+auditors,2003,eve
+contractors,2004,frank
+git_users,2010,alice:bob:carol
+docker_users,2011,carol:dave
+deploy_team,2012,carol:dave
+sudo_admins,2020,

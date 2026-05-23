@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Enterprise User & Group Management — Clearance Protocol v1.0.0</title>
+  <meta name="description" content="Production-grade Bash automation for useradd, groupadd, sudo/visudo, password aging (chage), and account locking (faillock) on RHEL 9." />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ── Header ──────────────────────────────────────────────────────────────── -->
+<header class="site-header" role="banner">
+  <div class="header-inner">
+    <a href="#" class="logo" aria-label="Enterprise User Management Home">
+      <div class="logo-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          <path d="M21 21v-2a4 4 0 0 0-3-3.87"/>
+        </svg>
+      </div>
+      <span>enterprise-user-mgmt</span>
+      <span class="logo-badge">v1.0.0</span>
+    </a>
+    <nav class="header-nav" aria-label="Primary navigation">
+      <a href="#modules">Modules</a>
+      <a href="#explorer">Scripts</a>
+      <a href="#playground">Playground</a>
+      <a href="#install">Install</a>
+    </nav>
+    <a href="https://github.com/samiulAsumel/enterprise-user-mgmt" class="btn-primary" target="_blank" rel="noopener noreferrer">
+      GitHub →
+    </a>
+  </div>
+</header>
+
+<!-- ── Hero ────────────────────────────────────────────────────────────────── -->
+<main id="main-content">
+<section id="hero" aria-labelledby="hero-title">
+  <div class="hero-glow" aria-hidden="true"></div>
+  <div class="hero-inner container">
+    <div class="hero-text">
+      <div class="hero-eyebrow" aria-label="Platform: RHEL 9 / CentOS Stream 9">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        RHEL 9 · Clearance Protocol
+      </div>
+      <h1 class="hero-title" id="hero-title">
+        Enterprise<br/>
+        <span>User & Group</span><br/>
+        Management
+      </h1>
+      <p class="hero-desc">
+        Production-grade Bash automation for <strong>useradd</strong>, <strong>groupadd</strong>,
+        <strong>sudo / visudo</strong>, <strong>password aging</strong>, and
+        <strong>account locking</strong> via <code>faillock</code> and <code>chage</code>.
+        CSV-driven, audit-logged, dry-run capable.
+      </p>
+      <div class="hero-actions">
+        <a href="#install" class="btn-primary">Quick Install</a>
+        <a href="#explorer" class="btn-outline">Explore Scripts</a>
+      </div>
+    </div>
+
+    <div class="hero-visual" aria-hidden="true">
+      <div class="terminal-card">
+        <div class="terminal-bar">
+          <span class="terminal-dot red"></span>
+          <span class="terminal-dot yellow"></span>
+          <span class="terminal-dot green"></span>
+          <span class="terminal-title">user_mgmt_master.sh --dry-run</span>
+        </div>
+        <div class="terminal-body" id="hero-terminal">
+          <div><span class="t-info">╔══════════════════════════════════════╗</span></div>
+          <div><span class="t-info">║  ENTERPRISE USER & GROUP MGMT v1.0  ║</span></div>
+          <div><span class="t-info">╚══════════════════════════════════════╝</span></div>
+          <div>&nbsp;</div>
+          <div><span class="t-warn">⚠  DRY-RUN MODE — no changes applied</span></div>
+          <div>&nbsp;</div>
+          <div><span class="t-info">[09:01:14] [INFO] [CREATE_GROUPS]</span></div>
+          <div><span class="t-ok">  ✔ Group 'developers' created (gid=2001)</span></div>
+          <div><span class="t-ok">  ✔ Group 'ops_team' created (gid=2002)</span></div>
+          <div><span class="t-ok">  ✔ Group 'sudo_admins' created (gid=2020)</span></div>
+          <div>&nbsp;</div>
+          <div><span class="t-info">[09:01:14] [INFO] [CREATE_USERS]</span></div>
+          <div><span class="t-ok">  ✔ alice (uid=1101) shell=/bin/bash</span></div>
+          <div><span class="t-ok">  ✔ carol (uid=1103) → ops_team,docker_users</span></div>
+          <div><span class="t-warn">  ⊘ frank (uid=1106) — group 'contractors' missing</span></div>
+          <div>&nbsp;</div>
+          <div><span class="t-info">[09:01:15] [INFO] [SUDO_CONFIG]</span></div>
+          <div><span class="t-ok">  ✔ 00_defaults validated by visudo</span></div>
+          <div><span class="t-ok">  ✔ 10_admin_groups written (sudo_admins)</span></div>
+          <div>&nbsp;</div>
+          <div><span class="t-info">[09:01:15] [INFO] [PASSWORD_AGING]</span></div>
+          <div><span class="t-ok">  ✔ alice: max=90 min=1 warn=14 inactive=30</span></div>
+          <div>&nbsp;</div>
+          <div><span class="t-prompt">root@rhel9 # </span><span class="cursor-blink"></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Stats ────────────────────────────────────────────────────────────────── -->
+<div class="stats-bar" role="region" aria-label="Project statistics">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <div class="stat-num">7</div>
+      <div class="stat-label">Bash Modules</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">CSV</div>
+      <div class="stat-label">Manifest-Driven</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">Audit Logged</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">RHEL 9</div>
+      <div class="stat-label">Production Ready</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Modules ──────────────────────────────────────────────────────────────── -->
+<section id="modules" class="section" aria-labelledby="modules-heading">
+  <div class="container">
+    <div class="section-tag" aria-hidden="true">Architecture</div>
+    <h2 class="section-heading" id="modules-heading">Seven Specialized Modules</h2>
+    <p class="section-sub">
+      Each module runs standalone or as part of the full pipeline.
+      Every action is dry-run capable, logged to syslog, and idempotent.
+    </p>
+
+    <div class="modules-grid">
+
+      <article class="card reveal">
+        <div class="card-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 1-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <div class="card-title">create_users.sh</div>
+        <div class="card-desc">
+          Bulk user creation from a CSV manifest. Handles UID assignment, home directories,
+          shell, primary & secondary groups, GECOS fields, and initial password locking.
+        </div>
+        <div style="margin-top:14px; display:flex; gap:6px; flex-wrap:wrap;">
+          <span class="badge badge-cyan">useradd</span>
+          <span class="badge badge-steel">CSV-driven</span>
+          <span class="badge badge-emerald">idempotent</span>
+        </div>
+      </article>
+
+      <article class="card reveal" style="transition-delay:.05s">
+        <div class="card-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+            <line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/>
+          </svg>
+        </div>
+        <div class="card-title">create_groups.sh</div>
+        <div class="card-desc">
+          Bulk group creation and membership synchronization. Creates groups with custom GIDs,
+          then syncs member lists — adds missing members, skips existing ones.
+        </div>
+        <div style="margin-top:14px; display:flex; gap:6px; flex-wrap:wrap;">
+          <span class="badge badge-cyan">groupadd</span>
+          <span class="badge badge-steel">usermod -aG</span>
+          <span class="badge badge-emerald">sync</span>
+        </div>
+      </article>
+
+      <article class="card reveal" style="transition-delay:.1s">
+        <div class="card-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+        </div>
+        <div class="card-title">sudo_config.sh</div>
+        <div class="card-desc">
+          Writes <code>/etc/sudoers.d/</code> fragments — validated by <code>visudo -c</code>
+          before applying. Configures admin full-sudo, ops restricted commands, auditor
+          read-only, and global security defaults.
+        </div>
+        <div style="margin-top:14px; display:flex; gap:6px; flex-wrap:wrap;">
+          <span class="badge badge-rose">visudo</span>
+          <span class="badge badge-steel">sudoers.d</span>
+          <span class="badge badge-amber">validated</span>
+        </div>
+      </article>
+
+      <article class="card reveal" style="transition-delay:.15s">
+        <div class="card-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <div class="card-title">password_policy.sh</div>
+        <div class="card-desc">
+          Applies system-wide password complexity via <code>pwquality.conf</code>,
+          sets global aging defaults in <code>/etc/login.defs</code>, and enables
+          <code>pam_pwhistory</code> via authselect — all with file backups.
+        </div>
+        <div style="margin-top:14px; display:flex; gap:6px; flex-wrap:wrap;">
+          <span class="badge badge-rose">pwquality</span>
+          <span class="badge badge-steel">login.defs</span>
+          <span class="badge badge-amber">authselect</span>
+        </div>
+      </article>
+
+      <article class="card reveal" style="transition-delay:.2s">
+        <div class="card-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+        </div>
+        <div class="card-title">password_aging.sh</div>
+        <div class="card-desc">
+          Per-user aging via <code>chage</code> from a CSV manifest. Sets max days,
+          min days, warning period, inactive grace, and hard expiry date.
+          Applies global defaults to all unlisted regular users.
+        </div>
+        <div style="margin-top:14px; display:flex; gap:6px; flex-wrap:wrap;">
+          <span class="badge badge-cyan">chage</span>
+          <span class="badge badge-steel">per-user</span>
+          <span class="badge badge-emerald">CSV</span>
+        </div>
+      </article>
+
+      <article class="card reveal" style="transition-delay:.25s">
+        <div class="card-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+          </svg>
+        </div>
+        <div class="card-title">account_locking.sh</div>
+        <div class="card-desc">
+          Configures <code>faillock</code> brute-force protection (deny, fail_interval,
+          unlock_time) and processes a lock/unlock manifest with
+          <code>passwd -l/u</code> and <code>faillock --reset</code>.
+        </div>
+        <div style="margin-top:14px; display:flex; gap:6px; flex-wrap:wrap;">
+          <span class="badge badge-rose">faillock</span>
+          <span class="badge badge-steel">passwd -l</span>
+          <span class="badge badge-amber">PAM</span>
+        </div>
+      </article>
+
+      <article class="card reveal" style="grid-column: span 3; transition-delay:.3s" id="audit-card">
+        <div style="display:grid; grid-template-columns:auto 1fr; gap:20px; align-items:start;">
+          <div class="card-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
+            </svg>
+          </div>
+          <div>
+            <div class="card-title">audit_report.sh — Security Audit Report Generator</div>
+            <div class="card-desc">
+              Produces HTML + plain-text reports covering every regular user: group memberships,
+              sudo access level, password status (active/locked/no-password), last change date,
+              aging settings, expiry status, and faillock failure count.
+              Optionally emails the HTML report. Output goes to <code>/var/log/user-mgmt/reports/</code>.
+            </div>
+            <div style="margin-top:14px; display:flex; gap:6px; flex-wrap:wrap;">
+              <span class="badge badge-cyan">HTML report</span>
+              <span class="badge badge-steel">text report</span>
+              <span class="badge badge-emerald">email</span>
+              <span class="badge badge-amber">cron-ready</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── How it Works ─────────────────────────────────────────────────────────── -->
+<section id="flow" class="section" aria-labelledby="flow-heading">
+  <div class="container">
+    <div class="section-tag" aria-hidden="true">Pipeline</div>
+    <h2 class="section-heading" id="flow-heading">How the Pipeline Runs</h2>
+    <p class="section-sub">Seven steps, executed in dependency order. Any step can be run independently with <code>--module &lt;name&gt;</code>.</p>
+
+    <div class="flow-grid" role="list" aria-label="Pipeline steps">
+      <div class="flow-step reveal" role="listitem">
+        <div class="flow-num">1</div>
+        <div class="flow-step-title">Edit Config</div>
+        <div class="flow-step-desc">Set defaults in <code>config.conf</code> — shell, password policy, faillock settings, log paths.</div>
+      </div>
+      <div class="flow-step reveal" style="transition-delay:.08s" role="listitem">
+        <div class="flow-num">2</div>
+        <div class="flow-step-title">Define Manifests</div>
+        <div class="flow-step-desc">Populate <code>data/groups.csv</code>, <code>users.csv</code>, <code>aging.csv</code>, and <code>locks.csv</code> CSVs.</div>
+      </div>
+      <div class="flow-step reveal" style="transition-delay:.16s" role="listitem">
+        <div class="flow-num">3</div>
+        <div class="flow-step-title">Dry Run</div>
+        <div class="flow-step-desc">Execute <code>--dry-run</code> to preview every action with zero system changes.</div>
+      </div>
+      <div class="flow-step reveal" style="transition-delay:.24s" role="listitem">
+        <div class="flow-num">4</div>
+        <div class="flow-step-title">Apply & Audit</div>
+        <div class="flow-step-desc">Run the full pipeline. Review the generated HTML audit report for compliance confirmation.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Script Explorer ──────────────────────────────────────────────────────── -->
+<section id="explorer" class="section" aria-labelledby="explorer-heading">
+  <div class="container">
+    <div class="section-tag" aria-hidden="true">Scripts</div>
+    <h2 class="section-heading" id="explorer-heading">Script Explorer</h2>
+    <p class="section-sub">Browse every file in the repository. Click to view source, copy to clipboard.</p>
+
+    <div class="explorer-layout" role="region" aria-label="Script explorer">
+      <div class="explorer-sidebar" role="navigation" aria-label="File list">
+        <div class="sidebar-heading">Repository Files</div>
+        <div id="file-list" role="listbox" aria-label="Script files"></div>
+      </div>
+      <div class="explorer-main">
+        <div class="explorer-topbar">
+          <span class="explorer-filename" id="explorer-filename" aria-live="polite">user_mgmt_master.sh</span>
+          <div class="explorer-actions">
+            <button class="icon-btn" id="copy-code-btn" title="Copy code" aria-label="Copy code to clipboard">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="explorer-desc" id="explorer-desc" aria-live="polite"></div>
+        <div class="code-wrap" role="region" aria-label="Script source code">
+          <pre id="code-display" aria-live="polite"></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Playground ────────────────────────────────────────────────────────────── -->
+<section id="playground" class="section" aria-labelledby="pg-heading">
+  <div class="container">
+    <div class="section-tag" aria-hidden="true">Interactive</div>
+    <h2 class="section-heading" id="pg-heading">Command Playground</h2>
+    <p class="section-sub">Simulate useradd, chage, and faillock commands. See the exact flags that would be generated.</p>
+
+    <div class="pg-layout">
+
+      <!-- Left: Input panels -->
+      <div style="display:flex; flex-direction:column; gap:20px;">
+
+        <!-- User Creation Builder -->
+        <div class="pg-panel">
+          <div class="pg-panel-header">useradd — User Creation Builder</div>
+          <div class="pg-body">
+            <div class="pg-row">
+              <div class="pg-field">
+                <label class="pg-label" for="pg-username">Username</label>
+                <input class="pg-input" id="pg-username" type="text" value="jsmith" placeholder="username" autocomplete="off" />
+              </div>
+              <div class="pg-field">
+                <label class="pg-label" for="pg-uid">UID (blank=auto)</label>
+                <input class="pg-input" id="pg-uid" type="number" placeholder="1105" min="1000" max="60000" />
+              </div>
+            </div>
+            <div class="pg-row">
+              <div class="pg-field">
+                <label class="pg-label" for="pg-group">Primary Group</label>
+                <input class="pg-input" id="pg-group" type="text" value="developers" placeholder="developers" autocomplete="off" />
+              </div>
+              <div class="pg-field">
+                <label class="pg-label" for="pg-shell">Shell</label>
+                <select class="pg-select" id="pg-shell">
+                  <option value="/bin/bash" selected>/bin/bash</option>
+                  <option value="/bin/zsh">/bin/zsh</option>
+                  <option value="/sbin/nologin">/sbin/nologin</option>
+                  <option value="/bin/false">/bin/false</option>
+                </select>
+              </div>
+            </div>
+            <div class="pg-field">
+              <label class="pg-label" for="pg-comment">GECOS Comment</label>
+              <input class="pg-input" id="pg-comment" type="text" value="John Smith — Backend Engineer" placeholder="Full Name — Role" autocomplete="off" />
+            </div>
+            <div class="pg-field">
+              <label class="pg-label" for="pg-secgroups">Secondary Groups (comma-separated)</label>
+              <input class="pg-input" id="pg-secgroups" type="text" value="git_users,docker_users" placeholder="group1,group2" autocomplete="off" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Password Aging Builder -->
+        <div class="pg-panel">
+          <div class="pg-panel-header">chage — Password Aging Builder</div>
+          <div class="pg-body">
+            <div class="pg-field">
+              <label class="pg-label" for="pg-maxdays">Max Days <span id="max-val" class="pg-range-val">90</span></label>
+              <input class="pg-range" id="pg-maxdays" type="range" min="0" max="365" value="90" />
+            </div>
+            <div class="pg-field">
+              <label class="pg-label" for="pg-mindays">Min Days <span id="min-val" class="pg-range-val">1</span></label>
+              <input class="pg-range" id="pg-mindays" type="range" min="0" max="30" value="1" />
+            </div>
+            <div class="pg-field">
+              <label class="pg-label" for="pg-warndays">Warn Days <span id="warn-val" class="pg-range-val">14</span></label>
+              <input class="pg-range" id="pg-warndays" type="range" min="0" max="30" value="14" />
+            </div>
+            <div class="pg-field">
+              <label class="pg-label" for="pg-inactivedays">Inactive Days <span id="inactive-val" class="pg-range-val">30</span></label>
+              <input class="pg-range" id="pg-inactivedays" type="range" min="0" max="90" value="30" />
+            </div>
+            <div class="pg-row">
+              <div class="pg-field">
+                <label class="pg-label" for="pg-expire">Expiry Date</label>
+                <input class="pg-input" id="pg-expire" type="date" />
+              </div>
+              <div class="pg-field">
+                <label class="pg-label" for="pg-lock-action">Account Action</label>
+                <select class="pg-select" id="pg-lock-action">
+                  <option value="none">None</option>
+                  <option value="lock">Lock (passwd -l)</option>
+                  <option value="unlock">Unlock (passwd -u)</option>
+                  <option value="reset">Reset faillock</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn-run" id="pg-generate" aria-label="Generate commands">
+              ⚡ Generate Commands
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right: Output -->
+      <div style="display:flex; flex-direction:column; gap:20px;">
+
+        <div class="pg-panel" style="flex:1;">
+          <div class="pg-panel-header">Generated Commands</div>
+          <div class="pg-body">
+            <pre class="pg-output" id="pg-output" aria-live="polite" aria-atomic="true"></pre>
+          </div>
+        </div>
+
+        <!-- Account Status Dashboard -->
+        <div class="pg-panel">
+          <div class="pg-panel-header">Account Status Dashboard</div>
+          <div class="pg-body" style="padding-top:8px;">
+            <div class="chage-bar-wrap" id="aging-bar-section">
+              <div class="chage-bar-label">
+                <span>Password Age Timeline</span>
+                <span id="aging-bar-pct">0%</span>
+              </div>
+              <div class="chage-bar">
+                <div class="chage-bar-fill good" id="aging-bar-fill" style="width:0%"></div>
+              </div>
+              <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:.7rem; color:var(--text-muted); font-family:var(--font-mono);">
+                <span>Last Change</span>
+                <span id="warn-marker">Warn Zone</span>
+                <span>Expiry</span>
+              </div>
+            </div>
+            <div class="status-grid" id="pg-status-grid">
+              <!-- Populated by playground.js -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Install ───────────────────────────────────────────────────────────────── -->
+<section id="install" class="section" aria-labelledby="install-heading" style="background: var(--bg-deep);">
+  <div class="container">
+    <div class="section-tag" aria-hidden="true">Installation</div>
+    <h2 class="section-heading" id="install-heading">Get Running in Minutes</h2>
+    <p class="section-sub">Clone the repo, edit <code>config.conf</code>, populate your CSV manifests, dry-run, then apply.</p>
+
+    <div class="install-tabs" role="tablist" aria-label="Installation methods">
+      <button class="install-tab active" role="tab" aria-selected="true" aria-controls="tab-quick" id="tab-btn-quick" data-tab="quick">Quick Start</button>
+      <button class="install-tab" role="tab" aria-selected="false" aria-controls="tab-single" id="tab-btn-single" data-tab="single">Single Module</button>
+      <button class="install-tab" role="tab" aria-selected="false" aria-controls="tab-cron" id="tab-btn-cron" data-tab="cron">Cron Schedule</button>
+    </div>
+
+    <div class="install-code" id="tab-quick" role="tabpanel" aria-labelledby="tab-btn-quick">
+      <button class="copy-btn" id="copy-install-btn" aria-label="Copy installation commands">Copy</button>
+      <pre id="install-code-block"><span class="t-info"># 1. Clone the repository</span>
+<span class="t-prompt">$ </span><span class="t-cmd">git clone</span> <span class="t-str">https://github.com/samiulAsumel/enterprise-user-mgmt.git</span>
+<span class="t-prompt">$ </span><span class="t-cmd">cd</span> enterprise-user-mgmt
+
+<span class="t-info"># 2. Review and edit configuration</span>
+<span class="t-prompt">$ </span><span class="t-cmd">vi</span> config.conf
+
+<span class="t-info"># 3. Populate CSV manifests (sample files auto-generated on first run)</span>
+<span class="t-prompt">$ </span><span class="t-cmd">vi</span> data/groups.csv
+<span class="t-prompt">$ </span><span class="t-cmd">vi</span> data/users.csv
+<span class="t-prompt">$ </span><span class="t-cmd">vi</span> data/aging.csv
+
+<span class="t-info"># 4. Dry run — no changes applied</span>
+<span class="t-prompt">$ </span><span class="t-cmd">sudo bash</span> user_mgmt_master.sh <span class="t-flag">--dry-run --verbose</span>
+
+<span class="t-info"># 5. Install system-wide + weekly cron</span>
+<span class="t-prompt">$ </span><span class="t-cmd">sudo bash</span> install.sh <span class="t-flag">--install</span>
+
+<span class="t-info"># 6. Full run</span>
+<span class="t-prompt">$ </span><span class="t-cmd">sudo</span> user-mgmt</pre>
+    </div>
+
+    <div class="install-code" id="tab-single" role="tabpanel" aria-labelledby="tab-btn-single" hidden>
+      <button class="copy-btn" data-tab-copy="single" aria-label="Copy single module commands">Copy</button>
+      <pre><span class="t-info"># Run a single module without affecting others</span>
+
+<span class="t-prompt">$ </span><span class="t-cmd">sudo</span> user-mgmt <span class="t-flag">--module</span> <span class="t-str">users</span>      <span class="t-info"># create_users only</span>
+<span class="t-prompt">$ </span><span class="t-cmd">sudo</span> user-mgmt <span class="t-flag">--module</span> <span class="t-str">groups</span>     <span class="t-info"># create_groups only</span>
+<span class="t-prompt">$ </span><span class="t-cmd">sudo</span> user-mgmt <span class="t-flag">--module</span> <span class="t-str">sudo</span>       <span class="t-info"># sudo_config only</span>
+<span class="t-prompt">$ </span><span class="t-cmd">sudo</span> user-mgmt <span class="t-flag">--module</span> <span class="t-str">policy</span>     <span class="t-info"># password_policy only</span>
+<span class="t-prompt">$ </span><span class="t-cmd">sudo</span> user-mgmt <span class="t-flag">--module</span> <span class="t-str">aging</span>      <span class="t-info"># password_aging only</span>
+<span class="t-prompt">$ </span><span class="t-cmd">sudo</span> user-mgmt <span class="t-flag">--module</span> <span class="t-str">locking</span>    <span class="t-info"># account_locking only</span>
+<span class="t-prompt">$ </span><span class="t-cmd">sudo</span> user-mgmt <span class="t-flag">--module</span> <span class="t-str">report</span>     <span class="t-info"># audit_report only</span>
+
+<span class="t-info"># Or run standalone from the modules/ directory</span>
+<span class="t-prompt">$ </span><span class="t-cmd">sudo bash</span> modules/account_locking.sh <span class="t-flag">--dry-run</span>
+<span class="t-prompt">$ </span><span class="t-cmd">sudo bash</span> modules/password_aging.sh <span class="t-flag">--verbose</span></pre>
+    </div>
+
+    <div class="install-code" id="tab-cron" role="tabpanel" aria-labelledby="tab-btn-cron" hidden>
+      <button class="copy-btn" data-tab-copy="cron" aria-label="Copy cron configuration">Copy</button>
+      <pre><span class="t-info"># /etc/cron.d/enterprise-user-mgmt (created by install.sh)</span>
+<span class="t-info"># Weekly audit report every Sunday at 01:00</span>
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+<span class="t-str">0 1 * * 0</span>  root  user-mgmt <span class="t-flag">--report-only</span> >> /var/log/user-mgmt/cron.log 2>&1
+
+<span class="t-info"># Monthly full sync (1st of month, 02:00) — add this manually if needed</span>
+<span class="t-str">0 2 1 * *</span>  root  user-mgmt <span class="t-flag">--module aging</span> >> /var/log/user-mgmt/cron.log 2>&1</pre>
+    </div>
+
+    <!-- Requirements -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:32px;">
+      <div class="card">
+        <div class="card-title" style="margin-bottom:12px; font-size:.95rem;">System Requirements</div>
+        <ul style="display:flex; flex-direction:column; gap:7px; font-size:.82rem; color:var(--text-secondary); font-family:var(--font-mono);">
+          <li><span style="color:var(--emerald)">✔</span> RHEL 9 / CentOS Stream 9 / Rocky 9 / AlmaLinux 9</li>
+          <li><span style="color:var(--emerald)">✔</span> shadow-utils (useradd, chage, passwd)</li>
+          <li><span style="color:var(--emerald)">✔</span> sudo + visudo</li>
+          <li><span style="color:var(--emerald)">✔</span> pam (pam_pwquality, pam_faillock)</li>
+          <li><span style="color:var(--emerald)">✔</span> authselect (RHEL 9 default)</li>
+          <li><span style="color:var(--cyan)">ℹ</span> Root / sudo access required</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title" style="margin-bottom:12px; font-size:.95rem;">Log Output</div>
+        <ul style="display:flex; flex-direction:column; gap:7px; font-size:.82rem; color:var(--text-secondary); font-family:var(--font-mono);">
+          <li><span style="color:var(--cyan)">→</span> /var/log/user-mgmt/user_mgmt.log</li>
+          <li><span style="color:var(--cyan)">→</span> /var/log/user-mgmt/cron.log</li>
+          <li><span style="color:var(--cyan)">→</span> /var/log/user-mgmt/reports/audit_*.html</li>
+          <li><span style="color:var(--cyan)">→</span> /var/log/secure (via syslog authpriv)</li>
+          <li><span style="color:var(--cyan)">→</span> /var/log/audit/audit.log (faillock events)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ── Footer ────────────────────────────────────────────────────────────────── -->
+<footer class="site-footer" role="contentinfo">
+  <div class="footer-inner">
+    <div class="footer-copy">enterprise-user-mgmt v1.0.0 — Clearance Protocol · RHEL 9</div>
+    <nav class="footer-links" aria-label="Footer links">
+      <a href="https://github.com/samiulAsumel/enterprise-user-mgmt" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href="#modules">Modules</a>
+      <a href="#install">Install</a>
+    </nav>
+  </div>
+</footer>
+
+<!-- ── Toast ─────────────────────────────────────────────────────────────────── -->
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="scripts-data.js"></script>
+<script src="main.js"></script>
+<script src="playground.js"></script>
+</body>
+</html>

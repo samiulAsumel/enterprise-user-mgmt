@@ -1,0 +1,6 @@
+# username,action
+# action: lock | unlock | reset-faillock
+# Uncomment lines to apply actions.
+# frank,lock
+# alice,unlock
+# bob,reset-faillock
