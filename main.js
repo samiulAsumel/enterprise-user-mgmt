@@ -108,7 +108,7 @@ function fileIcon(badge) {
 }
 
 function initExplorer() {
-  if (!window.SCRIPTS_DATA) return;
+  if (typeof SCRIPTS_DATA === 'undefined' || !SCRIPTS_DATA) return;
   const fileList   = document.getElementById('file-list');
   const codeDisplay= document.getElementById('code-display');
   const explorerFn = document.getElementById('explorer-filename');
