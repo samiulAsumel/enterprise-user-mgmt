@@ -613,5 +613,77 @@ assert "All sudoers.d fragments valid" "\$local_fail" "0"
 echo ""
 echo "Results: PASS=\$PASS  FAIL=\$FAIL  SKIP=\$SKIP"
 (( FAIL > 0 )) && exit 1 || exit 0`
+  },
+
+  // ── data/ CSV manifests ──────────────────────────────────────────────────────
+  {
+    id: 'users-csv',
+    name: 'data/users.csv',
+    path: 'data/users.csv',
+    description: 'User manifest. One user per line: username, UID (blank=auto), primary group, secondary groups (colon-separated), login shell, GECOS comment. New users are created with passwords locked — an admin must explicitly set passwords after provisioning.',
+    badge: 'data',
+    code: '# username,uid,primary_group,secondary_groups,shell,comment\n' +
+          '# Leave uid blank for auto-assignment.\n' +
+          '# Secondary groups: colon-separated (group1:group2).\n' +
+          '\n' +
+          'alice,1101,developers,git_users:docker_users,/bin/bash,Alice Johnson — Backend Developer\n' +
+          'bob,1102,developers,git_users,/bin/bash,Bob Smith — Frontend Developer\n' +
+          'carol,1103,ops_team,docker_users:deploy_team,/bin/bash,Carol Davis — DevOps Engineer\n' +
+          'dave,1104,ops_team,deploy_team,/bin/bash,Dave Wilson — Systems Administrator\n' +
+          'eve,1105,auditors,,/sbin/nologin,Eve Martinez — Security Auditor\n' +
+          'frank,1106,contractors,,/bin/bash,Frank Brown — Contractor (temporary)'
+  },
+  {
+    id: 'groups-csv',
+    name: 'data/groups.csv',
+    path: 'data/groups.csv',
+    description: 'Group manifest. One group per line: groupname, GID (blank=auto), colon-separated member list. Groups are created before users so primary groups already exist when useradd runs. Members not yet existing are skipped with a warning.',
+    badge: 'data',
+    code: '# groupname,gid,members\n' +
+          '# Leave gid blank for auto-assignment.\n' +
+          '# Members: colon-separated usernames (must exist at run time).\n' +
+          '\n' +
+          'developers,2001,alice:bob\n' +
+          'ops_team,2002,carol:dave\n' +
+          'auditors,2003,eve\n' +
+          'contractors,2004,frank\n' +
+          'git_users,2010,alice:bob:carol\n' +
+          'docker_users,2011,carol:dave\n' +
+          'deploy_team,2012,carol:dave\n' +
+          'sudo_admins,2020,'
+  },
+  {
+    id: 'aging-csv',
+    name: 'data/aging.csv',
+    path: 'data/aging.csv',
+    description: 'Per-user password aging manifest fed to chage. Fields: username, max_days, min_days, warn_days, inactive_days, expire_date. Use "-" for any field to keep the existing/default value. expire_date is YYYY-MM-DD or "-". Global defaults apply to any unlisted regular users.',
+    badge: 'data',
+    code: '# username,max_days,min_days,warn_days,inactive_days,expire_date\n' +
+          '# Use "-" to keep existing/default for any field.\n' +
+          '# expire_date: YYYY-MM-DD or "-" to skip.\n' +
+          '\n' +
+          'alice,90,1,14,30,-\n' +
+          'bob,90,1,14,30,-\n' +
+          'carol,60,1,7,14,-\n' +
+          'dave,60,1,7,14,-\n' +
+          'eve,365,0,30,-,-\n' +
+          'frank,30,0,7,7,2025-12-31'
+  },
+  {
+    id: 'locks-csv',
+    name: 'data/locks.csv',
+    path: 'data/locks.csv',
+    description: 'Manual account lock/unlock manifest. action: lock (passwd -l), unlock (passwd -u + faillock --reset), or reset-faillock (clears failed-login counters only). All operations are logged to syslog authpriv.notice. Uncomment entries to activate them.',
+    badge: 'data',
+    code: '# username,action\n' +
+          '# action: lock | unlock | reset-faillock\n' +
+          '#\n' +
+          '# lock           — passwd -l; user cannot log in\n' +
+          '# unlock         — passwd -u + faillock --reset\n' +
+          '# reset-faillock — clear failed-login counters only\n' +
+          '#\n' +
+          '# frank,lock\n' +
+          '# alice,unlock\n' +
+          '# bob,reset-faillock'
   }
 ];

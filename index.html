@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Enterprise User & Group Management — Clearance Protocol v1.0.0</title>
   <meta name="description" content="Production-grade Bash automation for useradd, groupadd, sudo/visudo, password aging (chage), and account locking (faillock) on RHEL 9." />
+  <meta name="theme-color" content="#06B6D4" />
+  <meta property="og:type"        content="website" />
+  <meta property="og:title"       content="Enterprise User & Group Management — Clearance Protocol v1.0.0" />
+  <meta property="og:description" content="Production-grade Bash automation for useradd, groupadd, sudo/visudo, password aging (chage), and account locking (faillock) on RHEL 9." />
+  <meta property="og:url"         content="https://samiulAsumel.github.io/enterprise-user-mgmt/" />
+  <meta name="twitter:card"       content="summary_large_image" />
+  <meta name="twitter:title"      content="Enterprise User & Group Management" />
+  <meta name="twitter:description" content="CSV-driven, dry-run capable RHEL 9 user/group/sudo/PAM automation with audit reports." />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -259,7 +267,7 @@
         </div>
       </article>
 
-      <article class="card reveal" style="grid-column: span 3; transition-delay:.3s" id="audit-card">
+      <article class="card reveal audit-card-full" style="transition-delay:.3s" id="audit-card">
         <div style="display:grid; grid-template-columns:auto 1fr; gap:20px; align-items:start;">
           <div class="card-icon" aria-hidden="true">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -332,9 +340,12 @@
     <div class="explorer-layout" role="region" aria-label="Script explorer">
       <div class="explorer-sidebar" role="navigation" aria-label="File list">
         <div class="sidebar-heading">Repository Files</div>
-        <div id="file-list" role="listbox" aria-label="Script files"></div>
+        <div id="file-list" role="listbox" aria-label="Script files" aria-multiselectable="false"></div>
       </div>
       <div class="explorer-main">
+        <div class="explorer-mobile-select">
+          <select id="mobile-file-select" aria-label="Select script file"></select>
+        </div>
         <div class="explorer-topbar">
           <span class="explorer-filename" id="explorer-filename" aria-live="polite">user_mgmt_master.sh</span>
           <div class="explorer-actions">
